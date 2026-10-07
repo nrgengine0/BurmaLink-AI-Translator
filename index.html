@@ -94,15 +94,24 @@
                     </div>
                     <div>
                         <h1 class="font-bold text-lg leading-tight bg-gradient-to-r from-indigo-600 to-teal-500 bg-clip-text text-transparent">
-                            BurmaLink <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 ml-1">V 1.0</span>
+                            BurmaLink <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 ml-1">V 1.2</span>
                         </h1>
                         <p id="headerSubtitle" class="text-xs text-slate-500 dark:text-slate-400">မြန်မာ 🇲🇲 • English 🇺🇸 • တရုတ် 🇨🇳 ဘာသာပြန်</p>
                     </div>
                 </div>
 
-                <!-- Action Controls -->
+                <!-- Action Controls & Screen Detector Badge -->
                 <div class="flex items-center space-x-2">
-                    <!-- Menu UI Language Switcher (မြန်မာ / English / တရုတ်) -->
+                    
+                    <!-- Screen Size Detector Badge Button -->
+                    <button onclick="showScreenDetailsModal()" id="screenBadgeBtn" title="Screen Size အသေးစိတ်ကြည့်ရန်" 
+                        class="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 transition-all shadow-sm">
+                        <i id="screenDeviceIcon" class="fa-solid fa-desktop text-indigo-500"></i>
+                        <span id="screenDeviceName">PC</span>
+                        <span id="screenDimensions" class="font-mono text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-1.5 py-0.5 rounded-md ml-1">1920x1080</span>
+                    </button>
+
+                    <!-- Menu UI Language Switcher -->
                     <div class="relative">
                         <select id="uiLangSelect" onchange="changeUiLanguage(this.value)" class="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 rounded-xl px-2.5 py-1.5 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
                             <option value="my" selected>🇲🇲 မြန်မာ</option>
@@ -144,6 +153,10 @@
                 <button onclick="switchTab('history')" id="tab-history" class="tab-btn px-4 py-2.5 text-sm font-medium rounded-xl flex items-center space-x-2 transition-all whitespace-nowrap text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700/50">
                     <i class="fa-solid fa-history text-purple-500"></i>
                     <span id="label-tab-history">မှတ်တမ်း / Favorites</span>
+                </button>
+                <button onclick="showScreenDetailsModal()" class="sm:hidden tab-btn px-3 py-2.5 text-xs font-medium rounded-xl flex items-center space-x-1.5 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700/50">
+                    <i class="fa-solid fa-expand text-indigo-500"></i>
+                    <span>Screen Info</span>
                 </button>
             </nav>
         </div>
@@ -414,6 +427,85 @@
 
     </main>
 
+    <!-- Screen Details & Breakpoint Diagnostic Modal -->
+    <div id="screenModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-5 border border-slate-200 dark:border-slate-700">
+            <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-700 pb-3">
+                <div class="flex items-center space-x-2.5">
+                    <div id="modalDeviceBadgeIcon" class="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-desktop"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-base text-slate-800 dark:text-slate-100">Screen & Device Diagnostics</h3>
+                        <p class="text-xs text-slate-400">စက်ပစ္စည်း၏ Screen အတိုင်းအတာများ</p>
+                    </div>
+                </div>
+                <button onclick="hideScreenDetailsModal()" class="text-slate-400 hover:text-slate-600 text-lg p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Current Detected Stats Grid -->
+            <div class="grid grid-cols-2 gap-3">
+                <div class="p-3 bg-slate-50 dark:bg-slate-900/80 rounded-2xl border border-slate-200 dark:border-slate-700">
+                    <div class="text-xs text-slate-400 font-semibold mb-1">Device Type (အမျိုးအစား)</div>
+                    <div id="modalDeviceType" class="text-sm font-bold text-indigo-600 dark:text-indigo-400">PC / Desktop</div>
+                </div>
+                <div class="p-3 bg-slate-50 dark:bg-slate-900/80 rounded-2xl border border-slate-200 dark:border-slate-700">
+                    <div class="text-xs text-slate-400 font-semibold mb-1">Viewport Dimensions</div>
+                    <div id="modalViewportDim" class="text-sm font-mono font-bold text-teal-600 dark:text-teal-400">1920 x 1080 px</div>
+                </div>
+                <div class="p-3 bg-slate-50 dark:bg-slate-900/80 rounded-2xl border border-slate-200 dark:border-slate-700">
+                    <div class="text-xs text-slate-400 font-semibold mb-1">Screen Resolution</div>
+                    <div id="modalScreenRes" class="text-sm font-mono font-semibold text-slate-700 dark:text-slate-300">1920 x 1080 px</div>
+                </div>
+                <div class="p-3 bg-slate-50 dark:bg-slate-900/80 rounded-2xl border border-slate-200 dark:border-slate-700">
+                    <div class="text-xs text-slate-400 font-semibold mb-1">Tailwind Breakpoint</div>
+                    <div id="modalTailwindBp" class="text-sm font-mono font-bold text-amber-500">2xl (≥ 1536px)</div>
+                </div>
+            </div>
+
+            <!-- Screen Standard Reference Grid -->
+            <div>
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Screen Size Standards (သတ်မှတ်ချက်များ)</h4>
+                <div class="space-y-2 text-xs">
+                    <div id="bp-phone" class="flex items-center justify-between p-2 rounded-xl bg-slate-100 dark:bg-slate-700/40">
+                        <span class="flex items-center space-x-2">
+                            <i class="fa-solid fa-mobile-screen text-indigo-500 w-4"></i>
+                            <span class="font-medium">Phone (Mobile)</span>
+                        </span>
+                        <span class="font-mono text-slate-500">&lt; 768 px</span>
+                    </div>
+                    <div id="bp-pad" class="flex items-center justify-between p-2 rounded-xl bg-slate-100 dark:bg-slate-700/40">
+                        <span class="flex items-center space-x-2">
+                            <i class="fa-solid fa-tablet-screen-button text-amber-500 w-4"></i>
+                            <span class="font-medium">Pad / Tablet</span>
+                        </span>
+                        <span class="font-mono text-slate-500">768 px - 1023 px</span>
+                    </div>
+                    <div id="bp-laptop" class="flex items-center justify-between p-2 rounded-xl bg-slate-100 dark:bg-slate-700/40">
+                        <span class="flex items-center space-x-2">
+                            <i class="fa-solid fa-laptop text-teal-500 w-4"></i>
+                            <span class="font-medium">Laptop</span>
+                        </span>
+                        <span class="font-mono text-slate-500">1024 px - 1279 px</span>
+                    </div>
+                    <div id="bp-pc" class="flex items-center justify-between p-2 rounded-xl bg-slate-100 dark:bg-slate-700/40">
+                        <span class="flex items-center space-x-2">
+                            <i class="fa-solid fa-desktop text-purple-500 w-4"></i>
+                            <span class="font-medium">PC / Desktop</span>
+                        </span>
+                        <span class="font-mono text-slate-500">≥ 1280 px</span>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="hideScreenDetailsModal()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl text-sm transition-all shadow-md">
+                ပိတ်မည်
+            </button>
+        </div>
+    </div>
+
     <!-- Modal for Help / Info -->
     <div id="infoModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 border border-slate-200 dark:border-slate-700">
@@ -427,7 +519,7 @@
                 </button>
             </div>
             <div class="text-sm text-slate-600 dark:text-slate-300 space-y-3 leading-relaxed">
-                <p>ဤ Web Application သည် မြန်မာ 🇲🇲၊ အင်္ဂလိပ် 🇺🇸 နှင့် တရုတ် 🇨🇳 ဘာသာစကား ၃ မျိုးကို အချင်းချင်း အလွယ်တကူ ဘာသာပြန်ဆိုရန် ရေးသားထားသော ဘာသာပြန်စနစ် ဖြစ်ပါသည်။</p>
+                <p>ဤ Web Application သည် မြန်မာ 🇲🇲၊ အင်္ဂလိပ် 🇺🇸 နှင့် တရုတ် 🇨🇳 ဘာသာစကား ၃ မျိုးကို အလွယ်တကူ ဘာသာပြန်ဆိုရန် ရေးသားထားသော ဘာသာပြန်စနစ် ဖြစ်ပါသည်။</p>
                 <div class="p-3 bg-indigo-50 dark:bg-indigo-950/50 rounded-2xl border border-indigo-100 dark:border-indigo-900/50 text-xs space-y-1.5">
                     <div class="font-bold text-indigo-700 dark:text-indigo-300">👨‍💻 Developer Information</div>
                     <div><b>Web Dev:</b> VorSolo</div>
@@ -484,6 +576,86 @@
         function toggleDarkMode() {
             document.documentElement.classList.toggle('dark');
         }
+
+        /* ==================== SCREEN SIZE DETECTOR SYSTEM ==================== */
+        function getDeviceType(width) {
+            if (width < 768) {
+                return { name: 'Phone', type: 'phone', icon: 'fa-mobile-screen', color: 'text-indigo-500' };
+            } else if (width >= 768 && width < 1024) {
+                return { name: 'Pad / Tablet', type: 'pad', icon: 'fa-tablet-screen-button', color: 'text-amber-500' };
+            } else if (width >= 1024 && width < 1280) {
+                return { name: 'Laptop', type: 'laptop', icon: 'fa-laptop', color: 'text-teal-500' };
+            } else {
+                return { name: 'PC / Desktop', type: 'pc', icon: 'fa-desktop', color: 'text-purple-500' };
+            }
+        }
+
+        function getTailwindBreakpoint(w) {
+            if (w < 640) return 'xs (< 640px)';
+            if (w < 768) return 'sm (640px)';
+            if (w < 1024) return 'md (768px)';
+            if (w < 1280) return 'lg (1024px)';
+            if (w < 1536) return 'xl (1280px)';
+            return '2xl (≥ 1536px)';
+        }
+
+        function updateScreenInfo(isInitialLoad = false) {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            const device = getDeviceType(w);
+
+            // Update Header Badge
+            const nameEl = document.getElementById('screenDeviceName');
+            const dimEl = document.getElementById('screenDimensions');
+            const iconEl = document.getElementById('screenDeviceIcon');
+
+            if (nameEl) nameEl.innerText = device.name;
+            if (dimEl) dimEl.innerText = `${w}x${h}`;
+            if (iconEl) iconEl.className = `fa-solid ${device.icon} ${device.color}`;
+
+            // Update Modal Stats
+            const modalType = document.getElementById('modalDeviceType');
+            const modalView = document.getElementById('modalViewportDim');
+            const modalRes = document.getElementById('modalScreenRes');
+            const modalBp = document.getElementById('modalTailwindBp');
+            const modalIcon = document.getElementById('modalDeviceBadgeIcon');
+
+            if (modalType) modalType.innerText = `${device.name} (${device.type.toUpperCase()})`;
+            if (modalView) modalView.innerText = `${w} x ${h} px`;
+            if (modalRes) modalRes.innerText = `${window.screen.width} x ${window.screen.height} px`;
+            if (modalBp) modalBp.innerText = getTailwindBreakpoint(w);
+            if (modalIcon) modalIcon.innerHTML = `<i class="fa-solid ${device.icon}"></i>`;
+
+            // Highlight Active Breakpoint card in modal
+            const bpIds = ['bp-phone', 'bp-pad', 'bp-laptop', 'bp-pc'];
+            bpIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    if (id === `bp-${device.type}`) {
+                        el.className = "flex items-center justify-between p-2.5 rounded-xl bg-indigo-100 dark:bg-indigo-900/60 font-semibold text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800";
+                    } else {
+                        el.className = "flex items-center justify-between p-2 rounded-xl bg-slate-100 dark:bg-slate-700/40 opacity-70";
+                    }
+                }
+            });
+
+            if (isInitialLoad) {
+                showToast(`Detected: ${device.name} (${w} x ${h} px)`, "info");
+            }
+        }
+
+        function showScreenDetailsModal() {
+            updateScreenInfo(false);
+            document.getElementById('screenModal').classList.remove('hidden');
+        }
+
+        function hideScreenDetailsModal() {
+            document.getElementById('screenModal').classList.add('hidden');
+        }
+
+        window.addEventListener('resize', () => {
+            updateScreenInfo(false);
+        });
 
         const CATEGORIES = [
             { id: 'all', label: '🌐 အားလုံး' },
@@ -804,7 +976,6 @@
             document.getElementById('targetLangLabel').innerText = `${langNames[tgt] || tgt} ဘာသာပြန်ချက်`;
         }
 
-        /* Fixed Speech Recognition implementation */
         function initSpeechRecognition() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (SpeechRecognition) {
@@ -837,7 +1008,7 @@
                     document.getElementById('micStatusText').innerText = "အသံဖြင့်ပြောမည်";
                 };
 
-                state.recognition.onerror = (e) => {
+                state.recognition.onerror = () => {
                     state.isRecording = false;
                     const micBtn = document.getElementById('micBtn');
                     if (micBtn) {
@@ -1278,6 +1449,7 @@
             renderCategoryPills();
             renderPhrases();
             handleLangSelectChange();
+            updateScreenInfo(true); // Automatically detect device and display toast on enter!
         });
     </script>
 </body>
