@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BurmaLink AI</title>
+    <title>BurmaLink</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome Icons -->
@@ -215,18 +215,11 @@
                     <!-- Input Actions Bottom Bar -->
                     <div class="p-3 bg-slate-50/80 dark:bg-slate-800/80 border-t border-slate-100 dark:border-slate-700/50 flex items-center justify-between">
                         <div class="flex items-center space-x-2">
-                            <!-- Voice Input Select & Button -->
-                            <div class="flex items-center space-x-1 bg-slate-200/80 dark:bg-slate-700 p-1 rounded-xl">
-                                <button id="micBtn" onclick="toggleSpeechRecognition()" title="အသံဖြင့် ပြောဆိုမည်" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium flex items-center space-x-1.5 transition-all">
-                                    <i class="fa-solid fa-microphone" id="micIcon"></i>
-                                    <span id="micStatusText">Voice Input</span>
-                                </button>
-                                <select id="voiceLangSelect" class="bg-transparent text-slate-700 dark:text-slate-200 text-xs font-semibold px-2 py-1 border-0 focus:ring-0 focus:outline-none cursor-pointer">
-                                    <option value="en-US">🇺🇸 English</option>
-                                    <option value="zh-CN">🇨🇳 တရုတ် (Chinese)</option>
-                                    <option value="my-MM">🇲🇲 မြန်မာ (Myanmar)</option>
-                                </select>
-                            </div>
+                            <!-- Voice Input Button -->
+                            <button id="micBtn" onclick="toggleSpeechRecognition()" title="အသံဖြင့် ပြောဆိုမည်" class="px-3 py-2 rounded-xl bg-slate-200 dark:bg-slate-700 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 text-slate-700 dark:text-slate-200 text-xs font-medium flex items-center space-x-2 transition-all">
+                                <i class="fa-solid fa-microphone text-indigo-600 dark:text-indigo-400" id="micIcon"></i>
+                                <span id="micStatusText">အသံဖြင့်ပြောမည်</span>
+                            </button>
                             <!-- TTS Source Audio -->
                             <button onclick="speakText('source')" title="အသံဖွင့်ပါ" class="p-2 rounded-xl text-slate-500 hover:text-indigo-600 hover:bg-slate-200/60 dark:hover:bg-slate-700 transition-all">
                                 <i class="fa-solid fa-volume-high"></i>
@@ -344,7 +337,7 @@
                         <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl rounded-tl-none shadow-sm border border-slate-200 dark:border-slate-700 max-w-xl space-y-2">
                             <p class="text-sm">မင်္ဂလာပါ! ကျွန်တော်ကတော့ **BurmaLink AI စကားပြန် Bot** ဖြစ်ပါတယ်။</p>
                             <p class="text-xs text-slate-500 dark:text-slate-400">
-                                မည်သည့် မြန်မာ၊ အင်္ဂလိပ် သို့မဟုတ် တရုတ် စကားစုများကိုမဆို ရိုက်ထည့်ပါ သို့မဟုတ် မေးမြန်းပါ။ တိုက်ရိုက် ဘာသာပြန်ချက်များ ကူညီပေးပါမည်။
+                                မည်သည့် မြန်မာ၊ အင်္ဂလိပ် သို့မဟုတ် တရုတ် စကားစုများကိုမဆို ရိုက်ထည့်ပါ သို့မဟုတ် မေးမြန်းပါ။ တိုက်ရိုက် ဘာသာပြန်ချက်များ အသံထွက်များနှင့်တကွ ကူညီပေးပါမည်။
                             </p>
                         </div>
                     </div>
@@ -367,33 +360,15 @@
         <!-- ==================== SECTION 3: PHRASEBOOK ==================== -->
         <div id="view-phrasebook" class="tab-view hidden space-y-6">
             <!-- Search & Category Filters -->
-            <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-slate-200 dark:border-slate-700 space-y-3">
-                <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-                    <div class="relative w-full md:w-72">
-                        <i class="fa-solid fa-search absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
-                        <input type="text" id="phraseSearch" oninput="filterPhrases()" placeholder="စကားစုများ ရှာဖွေပါ..." 
-                            class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
-                    </div>
-
-                    <!-- Level Filters (အဆင့်အလိုက် စစ်ထုတ်ရန်) -->
-                    <div class="flex items-center space-x-1.5 w-full md:w-auto overflow-x-auto no-scrollbar" id="levelPills">
-                        <button onclick="setPhraseLevel('all')" id="level-all" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-amber-500 text-white shadow-sm">
-                            ⭐ အဆင့်အားလုံး (All Levels)
-                        </button>
-                        <button onclick="setPhraseLevel('L1')" id="level-L1" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200">
-                            🟢 Level 1 (အခြေခံ)
-                        </button>
-                        <button onclick="setPhraseLevel('L2')" id="level-L2" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200">
-                            🟡 Level 2 (အလတ်တန်း)
-                        </button>
-                        <button onclick="setPhraseLevel('L3')" id="level-L3" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200">
-                            🔴 Level 3 (အထက်တန်း)
-                        </button>
-                    </div>
+            <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="relative w-full md:w-72">
+                    <i class="fa-solid fa-search absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                    <input type="text" id="phraseSearch" oninput="filterPhrases()" placeholder="စကားစုများ ရှာဖွေပါ..." 
+                        class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
                 </div>
 
                 <!-- Category Pills -->
-                <div class="flex items-center space-x-2 overflow-x-auto w-full no-scrollbar pt-2 border-t border-slate-100 dark:border-slate-700/60" id="categoryPills">
+                <div class="flex items-center space-x-2 overflow-x-auto w-full md:w-auto no-scrollbar pb-1 md:pb-0" id="categoryPills">
                     <!-- Dynamic Pills -->
                 </div>
             </div>
@@ -505,389 +480,11 @@
 
         let activeHistoryFilter = 'all';
         let activeCategory = 'all';
-        let activeLevel = 'all';
-        let autoTranslateTimeout = null;
 
         function toggleDarkMode() {
             document.documentElement.classList.toggle('dark');
         }
 
-        /* NAVIGATION TAB SWITCHING */
-        function switchTab(tabId) {
-            const tabs = ['translator', 'bot', 'phrasebook', 'history'];
-            tabs.forEach(t => {
-                const view = document.getElementById(`view-${t}`);
-                const btn = document.getElementById(`tab-${t}`);
-                if (view) {
-                    if (t === tabId) {
-                        view.classList.remove('hidden');
-                    } else {
-                        view.classList.add('hidden');
-                    }
-                }
-                if (btn) {
-                    if (t === tabId) {
-                        btn.className = "tab-btn active px-4 py-2.5 text-sm font-medium rounded-xl flex items-center space-x-2 transition-all whitespace-nowrap bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800/50";
-                    } else {
-                        btn.className = "tab-btn px-4 py-2.5 text-sm font-medium rounded-xl flex items-center space-x-2 transition-all whitespace-nowrap text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700/50";
-                    }
-                }
-            });
-        }
-
-        /* UI MULTI-LANGUAGE DICTIONARY SWITCHER */
-        function changeUiLanguage(lang) {
-            const translations = {
-                my: {
-                    headerSubtitle: 'မြန်မာ 🇲🇲 • English 🇺🇸 • တရုတ် 🇨🇳 ဘာသာပြန်',
-                    tabTranslator: 'တိုက်ရိုက် ဘာသာပြန်',
-                    tabBot: 'စကားပြန် Bot',
-                    tabPhrasebook: 'နေ့စဉ်သုံး စကားပြော',
-                    tabHistory: 'မှတ်တမ်း / Favorites',
-                    historyTitle: 'သိမ်းဆည်းထားသော မှတ်တမ်းများ',
-                    clearHistory: 'မှတ်တမ်းအားလုံးဖျက်မည်',
-                    placeholder: 'ဘာသာပြန်ချက် ဤနေရာတွင် ပေါ်လာမည်...'
-                },
-                en: {
-                    headerSubtitle: 'Myanmar 🇲🇲 • English 🇺🇸 • Chinese 🇨🇳 Translator',
-                    tabTranslator: 'Direct Translator',
-                    tabBot: 'Interpreter Bot',
-                    tabPhrasebook: 'Daily Phrasebook',
-                    tabHistory: 'History & Favorites',
-                    historyTitle: 'Saved Translation History',
-                    clearHistory: 'Clear History',
-                    placeholder: 'Translation will appear here...'
-                },
-                zh: {
-                    headerSubtitle: '缅甸语 🇲🇲 • 英语 🇺🇸 • 中文 🇨🇳 翻译',
-                    tabTranslator: '实时翻译',
-                    tabBot: '同声传译 Bot',
-                    tabPhrasebook: '日常常用语',
-                    tabHistory: '历史与收藏',
-                    historyTitle: '已保存的历史记录',
-                    clearHistory: '清除所有记录',
-                    placeholder: '翻译结果将显示在这里...'
-                }
-            };
-
-            const dict = translations[lang] || translations.my;
-
-            const headerSub = document.getElementById('headerSubtitle');
-            if (headerSub) headerSub.innerText = dict.headerSubtitle;
-
-            const labelTrans = document.getElementById('label-tab-translator');
-            if (labelTrans) labelTrans.innerText = dict.tabTranslator;
-
-            const labelBot = document.getElementById('label-tab-bot');
-            if (labelBot) labelBot.innerText = dict.tabBot;
-
-            const labelPhrase = document.getElementById('label-tab-phrasebook');
-            if (labelPhrase) labelPhrase.innerText = dict.tabPhrasebook;
-
-            const labelHist = document.getElementById('label-tab-history');
-            if (labelHist) labelHist.innerText = dict.tabHistory;
-
-            const histTitle = document.getElementById('label-history-title');
-            if (histTitle) histTitle.innerText = dict.historyTitle;
-
-            const clearHist = document.getElementById('label-clear-history');
-            if (clearHist) clearHist.innerText = dict.clearHistory;
-
-            const tgtPlaceholder = document.getElementById('label-tgt-placeholder');
-            if (tgtPlaceholder) tgtPlaceholder.innerText = dict.placeholder;
-        }
-
-        /* LANGUAGE SELECT CHANGE HANDLER */
-        function handleLangSelectChange() {
-            const sl = document.getElementById('sourceLang')?.value;
-            const tl = document.getElementById('targetLang')?.value;
-            
-            const langNames = {
-                'auto': '✨ အလိုအလျောက် (Auto)',
-                'my': '🇲🇲 မြန်မာ',
-                'en': '🇺🇸 English',
-                'zh-CN': '🇨🇳 တရုတ် (Simplified)',
-                'zh-TW': '🇹🇼 တရုတ် (Traditional)'
-            };
-
-            const srcLabel = document.getElementById('sourceLangLabel');
-            if (srcLabel) {
-                srcLabel.innerText = `${langNames[sl] || sl} စာသားထည့်ပါ`;
-            }
-
-            const tgtLabel = document.getElementById('targetLangLabel');
-            if (tgtLabel) {
-                tgtLabel.innerText = `${langNames[tl] || tl} ဘာသာပြန်ချက်`;
-            }
-        }
-
-        /* SWAP SOURCE & TARGET LANGUAGES */
-        function swapLanguages() {
-            const slElem = document.getElementById('sourceLang');
-            const tlElem = document.getElementById('targetLang');
-            if (!slElem || !tlElem) return;
-
-            if (slElem.value === 'auto') {
-                showToast("Auto Detect မဟုတ်ဘဲ သီးသန့် ဘာသာစကား ရွေးချယ်ပြီးမှ ဘာသာစကား ချိန်းလို့ရပါမည်", "info");
-                return;
-            }
-
-            const tempLang = slElem.value;
-            slElem.value = tlElem.value;
-            tlElem.value = tempLang;
-
-            const srcInput = document.getElementById('sourceText');
-            const currentTargetText = state.targetText;
-
-            if (srcInput && currentTargetText) {
-                srcInput.value = currentTargetText;
-                handleSourceInput();
-            }
-
-            handleLangSelectChange();
-            executeTranslation();
-        }
-
-        /* CLEAR & PASTE SOURCE TEXT */
-        function clearSourceText() {
-            const srcInput = document.getElementById('sourceText');
-            if (srcInput) srcInput.value = '';
-            handleSourceInput();
-            executeTranslation();
-        }
-
-        async function pasteToSource() {
-            try {
-                let text = '';
-                if (navigator.clipboard && navigator.clipboard.readText) {
-                    text = await navigator.clipboard.readText();
-                }
-                if (text) {
-                    const srcInput = document.getElementById('sourceText');
-                    if (srcInput) {
-                        srcInput.value = text;
-                        handleSourceInput();
-                        executeTranslation();
-                        showToast("စာသား ကူးယူထည့်သွင်းပြီးပါပြီ", "success");
-                    }
-                } else {
-                    showToast("Clipboard တွင် စာသား မရှိပါ သို့မဟုတ် ခွင့်ပြုချက်မရှိပါ", "warning");
-                }
-            } catch (err) {
-                showToast("Clipboard မှ စာသားဖတ်၍မရပါ", "warning");
-            }
-        }
-
-        function handleSourceInput() {
-            const srcInput = document.getElementById('sourceText');
-            const text = srcInput ? srcInput.value : '';
-            const charCountElem = document.getElementById('charCount');
-            if (charCountElem) {
-                charCountElem.innerText = `${text.length} / 5000`;
-            }
-
-            clearTimeout(autoTranslateTimeout);
-            if (text.trim().length > 0) {
-                autoTranslateTimeout = setTimeout(() => {
-                    executeTranslation();
-                }, 800);
-            } else {
-                executeTranslation();
-            }
-        }
-
-        /* DIRECT GOOGLE TRANSLATION API SERVICE */
-        async function fetchGoogleTranslate(text, sl, tl) {
-            if (!text || !text.trim()) return { translated: '', detected: sl, pinyin: '' };
-            try {
-                const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${tl}&dt=t&dt=rm&q=${encodeURIComponent(text)}`;
-                const response = await fetch(url);
-                if (!response.ok) throw new Error('Translation API request failed');
-                const data = await response.json();
-                
-                let translatedText = '';
-                let pinyinText = '';
-                if (data && data[0]) {
-                    data[0].forEach(item => {
-                        if (item[0]) translatedText += item[0];
-                        if (item[2]) pinyinText += item[2] + ' ';
-                    });
-                }
-                const detectedLang = data[2] || sl;
-                return {
-                    translated: translatedText,
-                    detected: detectedLang,
-                    pinyin: pinyinText.trim()
-                };
-            } catch (err) {
-                console.error('Translation error:', err);
-                throw err;
-            }
-        }
-
-        async function executeTranslation() {
-            const srcInput = document.getElementById('sourceText');
-            const text = srcInput ? srcInput.value.trim() : '';
-            
-            if (!text) {
-                document.getElementById('targetText').innerHTML = `<span id="label-tgt-placeholder" class="text-slate-400 dark:text-slate-500 text-base italic font-normal">ဘာသာပြန်ချက် ဤနေရာတွင် ပေါ်လာမည်...</span>`;
-                document.getElementById('phoneticsContainer').classList.add('hidden');
-                state.targetText = '';
-                return;
-            }
-
-            const sl = document.getElementById('sourceLang').value;
-            const tl = document.getElementById('targetLang').value;
-            const loader = document.getElementById('translationLoader');
-
-            if (loader) loader.classList.remove('hidden');
-
-            try {
-                const res = await fetchGoogleTranslate(text, sl, tl);
-                state.targetText = res.translated;
-                state.phonetics = res.pinyin;
-
-                const tgtElem = document.getElementById('targetText');
-                if (tgtElem) tgtElem.innerText = res.translated;
-
-                const phoneticsContainer = document.getElementById('phoneticsContainer');
-                const phoneticText = document.getElementById('phoneticText');
-
-                if ((tl.startsWith('zh') || sl.startsWith('zh')) && res.pinyin) {
-                    if (phoneticsContainer) phoneticsContainer.classList.remove('hidden');
-                    if (phoneticText) phoneticText.innerText = res.pinyin;
-                } else {
-                    if (phoneticsContainer) phoneticsContainer.classList.add('hidden');
-                }
-
-                const historyItem = {
-                    id: Date.now(),
-                    source: text,
-                    target: res.translated,
-                    from: sl === 'auto' ? (res.detected || 'my') : sl,
-                    to: tl,
-                    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                };
-                saveToHistory(historyItem);
-            } catch (error) {
-                showToast("ဘာသာပြန်ရာတွင် အမှားအယွင်းရှိနေပါသည်။ အင်တာနက်ချိတ်ဆက်မှုကို စစ်ဆေးပါ။", "error");
-            } finally {
-                if (loader) loader.classList.add('hidden');
-            }
-        }
-
-        /* TEXT TO SPEECH PLAYER */
-        function speakText(type) {
-            if (!('speechSynthesis' in window)) {
-                showToast("သင့် Browser တွင် Text-to-Speech မပံ့ပိုးပါ", "warning");
-                return;
-            }
-
-            let text = '';
-            let langCode = 'en-US';
-
-            if (type === 'source') {
-                text = document.getElementById('sourceText')?.value.trim();
-                const sl = document.getElementById('sourceLang')?.value;
-                if (sl === 'my') langCode = 'my-MM';
-                else if (sl?.startsWith('zh')) langCode = 'zh-CN';
-                else langCode = 'en-US';
-            } else {
-                text = state.targetText;
-                const tl = document.getElementById('targetLang')?.value;
-                if (tl === 'my') langCode = 'my-MM';
-                else if (tl?.startsWith('zh')) langCode = 'zh-CN';
-                else langCode = 'en-US';
-            }
-
-            if (!text) {
-                showToast("အသံဖွင့်ရန် စာသားမရှိပါ", "warning");
-                return;
-            }
-
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = langCode;
-
-            utterance.onerror = () => {
-                showToast("အသံထွက်ပေးရန် ခက်ခဲနေပါသည်", "warning");
-            };
-
-            window.speechSynthesis.speak(utterance);
-        }
-
-        /* COPY & SHARE UTILITIES */
-        function copyTargetText() {
-            if (!state.targetText) {
-                showToast("ကူးယူရန် စာသားမရှိပါ", "warning");
-                return;
-            }
-
-            const textArea = document.createElement("textarea");
-            textArea.value = state.targetText;
-            textArea.style.position = "fixed";
-            textArea.style.left = "-9999px";
-            document.body.appendChild(textArea);
-            textArea.select();
-            try {
-                document.execCommand('copy');
-                showToast("ဘာသာပြန်ချက်ကို ကူးယူပြီးပါပြီ!", "success");
-            } catch (err) {
-                showToast("ကူးယူရာတွင် အဆင်မပြေပါ", "error");
-            }
-            document.body.removeChild(textArea);
-        }
-
-        function shareTranslation() {
-            const src = document.getElementById('sourceText')?.value;
-            const tgt = state.targetText;
-            if (!tgt) {
-                showToast("မျှဝေရန် စာသားမရှိပါ", "warning");
-                return;
-            }
-
-            const shareText = `[BurmaLink AI]\n${src}\n➡️ ${tgt}`;
-            if (navigator.share) {
-                navigator.share({
-                    title: 'BurmaLink AI Translation',
-                    text: shareText
-                }).catch(() => {});
-            } else {
-                copyTargetText();
-            }
-        }
-
-        /* PRESET CHIPS IMPLEMENTATION */
-        const PRESETS = [
-            "မင်္ဂလာပါ",
-            "ကျေးဇူးတင်ပါတယ်",
-            "ဒီဟာ ဘယ်လောက်လဲ",
-            "ကျေးဇူးပြု၍ ကူညီပါ",
-            "အဆင်ပြေရဲ့လား",
-            "ခဏလေး စောင့်ပေးပါ",
-            "မနက်ဖြန် အားလား"
-        ];
-
-        function renderPresetChips() {
-            const container = document.getElementById('presetChips');
-            if (!container) return;
-            container.innerHTML = PRESETS.map(preset => `
-                <button onclick="usePreset('${escapeJs(preset)}')" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-indigo-50 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-xs font-medium transition-all hover:text-indigo-600 dark:hover:text-indigo-400 border border-slate-200 dark:border-slate-600">
-                    ${escapeHtml(preset)}
-                </button>
-            `).join('');
-        }
-
-        function usePreset(text) {
-            const src = document.getElementById('sourceText');
-            if (src) {
-                src.value = text;
-                handleSourceInput();
-                executeTranslation();
-            }
-        }
-
-        /* CATEGORIES & PHRASEBOOK DATA */
         const CATEGORIES = [
             { id: 'all', label: '🌐 အားလုံး' },
             { id: 'daily', label: '💬 သဘာဝကျ နေ့စဉ်သုံး' },
@@ -899,65 +496,441 @@
             { id: 'emergency', label: '🚨 အရေးပေါ်' }
         ];
 
+        // Rich & Natural Phrases List
         const PHRASEBOOK_DATA = [
-            // LEVEL 1: BASIC (အခြေခံ)
-            { my: 'ဒီနေ့ဘာနေ့လဲ', en: 'What day is today?', zh: '今天是星期几？', pinyin: 'Jīntiān shì xīngqījǐ?', cat: 'daily', level: 'L1' },
-            { my: 'မင်္ဂလာပါ', en: 'Hello / Good day', zh: '你好', pinyin: 'Nǐ hǎo', cat: 'greetings', level: 'L1' },
-            { my: 'ကျေးဇူးတင်ပါတယ်', en: 'Thank you', zh: '谢谢', pinyin: 'Xièxiè', cat: 'greetings', level: 'L1' },
-            { my: 'ဟုတ်ကဲ့ / မဟုတ်ပါဘူး', en: 'Yes / No', zh: '是的 / 不是', pinyin: 'Shì de / Bù shì', cat: 'daily', level: 'L1' },
-            { my: 'ဒီဟာ ဘယ်လောက်လဲ', en: 'How much is this?', zh: '这个多少钱？', pinyin: 'Zhège duōshǎo qián?', cat: 'shopping', level: 'L1' },
-            { my: 'ရေတစ်ခွက် ပေးပါ', en: 'Please give me a glass of water', zh: '请给我一杯水', pinyin: 'Qǐng gěi wǒ yī bēi shuǐ', cat: 'dining', level: 'L1' },
-            { my: 'ခဏလေး စောင့်ပေးပါဦး', en: 'Just a moment, please', zh: '请稍等一下', pinyin: 'Qǐng shāo děng yīxià', cat: 'daily', level: 'L1' },
-            { my: 'မနက်ဖြန် အားလား', en: 'Are you free tomorrow?', zh: '你明天有空吗？', pinyin: 'Nǐ míngtiān yǒu kòng ma?', cat: 'daily', level: 'L1' },
-
-            // LEVEL 2: INTERMEDIATE (အလတ်တန်း)
-            { my: 'ငါဒီနေ့ အပြင်သွားစရာရှိတယ်', en: 'I have to go out today', zh: '我今天有事要出去', pinyin: 'Wǒ jīntiān yǒu shì yào chūqù', cat: 'daily', level: 'L2' },
-            { my: 'အဆင်ပြေရဲ့လား', en: 'Is everything okay?', zh: '一切都好吗？', pinyin: 'Yīqiè dōu hǎo ma?', cat: 'daily', level: 'L2' },
-            { my: 'နောက်မှ ပြန်ပြောမယ်နော်', en: 'I will talk to you later', zh: '我稍后跟你在聊', pinyin: 'Wǒ shāo hòu gēn nǐ zài liáo', cat: 'daily', level: 'L2' },
-            { my: 'စိတ်မရှိပါနဲ့နော်', en: 'No offense / Never mind', zh: '请别介意 / 没关系', pinyin: 'Qǐng bié jièyì / Méiguānxì', cat: 'daily', level: 'L2' },
-            { my: 'မဆိုးပါဘူး၊ အဆင်ပြေပါတယ်', en: 'Not bad, doing fine', zh: '还不错，挺好的', pinyin: 'Hái bùcuò, tǐng hǎo de', cat: 'daily', level: 'L2' },
-            { my: 'ဈေးနည်းနည်းလျှော့ပေးလို့ရမလား', en: 'Can you give me a discount?', zh: '能便宜一点吗？', pinyin: 'Néng piányí yīdiǎn ma?', cat: 'shopping', level: 'L2' },
-            { my: 'ကဒ်နဲ့ ငွေပေးချေလို့ရမလား', en: 'Can I pay by card?', zh: '可以用卡付款吗？', pinyin: 'Kěyǐ yòng kǎ fùkuǎn ma?', cat: 'shopping', level: 'L2' },
-            { my: 'ဟိုတယ်ကို သွားချင်ပါတယ်', en: 'I want to go to the hotel', zh: '我想去酒店', pinyin: 'Wǒ xiǎng qù jiǔdiàn', cat: 'travel', level: 'L2' },
-            { my: 'အစပ် မထည့်ပါနဲ့', en: 'Not spicy, please', zh: '请不要放辣', pinyin: 'Qǐng bùyào fàng là', cat: 'dining', level: 'L2' },
-
-            // LEVEL 3: ADVANCED (အထက်တန်း / အလုပ်သုံး)
-            { my: 'ကူညီပေးလို့ ကျေးဇူးအများကြီးတင်ပါတယ်', en: 'Thanks a lot for your help', zh: '非常感谢你的帮助', pinyin: 'Fēicháng gǎnxiè nǐ de bāngzhù', cat: 'greetings', level: 'L3' },
-            { my: 'အီးမေးလ် ပို့ပေးပါ့မယ်', en: 'I will send you an email', zh: '我会发邮件给你', pinyin: 'Wǒ huì fā yóujiàn gěi nǐ', cat: 'work', level: 'L3' },
-            { my: 'အစည်းအဝေး ဘယ်အချိန်စမှာလဲ', en: 'What time does the meeting start?', zh: '会议几点开始？', pinyin: 'Huìyì jǐ diǎn kāishǐ?', cat: 'work', level: 'L3' },
-            { my: 'ဒီကိစ္စနဲ့ ပတ်သက်ပြီး ပြန်အကြောင်းပြန်ပေးပါ', en: 'Please reply regarding this matter', zh: '关于这件事请回复我', pinyin: 'Guānyú zhè jiàn shì qǐng huífù wǒ', cat: 'work', level: 'L3' },
-            { my: 'ကူညီပါ ဦး!', en: 'Help me please!', zh: '请帮帮我！', pinyin: 'Qǐng bāng bāng wǒ!', cat: 'emergency', level: 'L3' },
-            { my: 'ဆရာဝန် လိုအပ်နေပါတယ်', en: 'I need a doctor', zh: '我需要医生', pinyin: 'Wǒ xūyào yīshēng', cat: 'emergency', level: 'L3' }
+            { my: 'အဆင်ပြေရဲ့လား', en: 'Is everything okay?', zh: '一切都好吗？', pinyin: 'Yīqiè dōu hǎo ma?', cat: 'daily' },
+            { my: 'နောက်မှ ပြန်ပြောမယ်နော်', en: 'I will talk to you later', zh: '我稍后跟你在聊', pinyin: 'Wǒ shāo hòu gēn nǐ zài liáo', cat: 'daily' },
+            { my: 'ခဏလေး စောင့်ပေးပါဦး', en: 'Just a moment, please', zh: '请稍等一下', pinyin: 'Qǐng shāo děng yīxià', cat: 'daily' },
+            { my: 'စိတ်မရှိပါနဲ့နော်', en: 'No offense / Never mind', zh: '请别介意 / 没关系', pinyin: 'Qǐng bié jièyì / Méiguānxì', cat: 'daily' },
+            { my: 'မဆိုးပါဘူး၊ အဆင်ပြေပါတယ်', en: 'Not bad, doing fine', zh: '还不错，挺好的', pinyin: 'Hái bùcuò, tǐng hǎo de', cat: 'daily' },
+            { my: 'ကူညီပေးလို့ ကျေးဇူးအများကြီးတင်ပါတယ်', en: 'Thanks a lot for your help', zh: '非常感谢你的帮助', pinyin: 'Fēicháng gǎnxiè nǐ de bāngzhù', cat: 'greetings' },
+            { my: 'တွေ့ရတာ ဝမ်းသာပါတယ်', en: 'Nice to meet you', zh: '很高兴认识你', pinyin: 'Hěn gāoxìng rènshí nǐ', cat: 'greetings' },
+            { my: 'ဒီဟာ ဘယ်လောက်လဲ', en: 'How much is this?', zh: '这个多少钱？', pinyin: 'Zhège duōshǎo qián?', cat: 'shopping' },
+            { my: 'ဈေးနည်းနည်းလျှော့ပေးလို့ရမလား', en: 'Can you give me a discount?', zh: '能便宜一点吗？', pinyin: 'Néng piányí yīdiǎn ma?', cat: 'shopping' },
+            { my: 'ကဒ်နဲ့ ငွေပေးချေလို့ရမလား', en: 'Can I pay by card?', zh: '可以用卡付款吗？', pinyin: 'Kěyǐ yòng kǎ fùkuǎn ma?', cat: 'shopping' },
+            { my: 'ဟိုတယ်ကို သွားချင်ပါတယ်', en: 'I want to go to the hotel', zh: '我想去酒店', pinyin: 'Wǒ xiǎng qù jiǔdiàn', cat: 'travel' },
+            { my: 'လေဆိပ် ဘယ်မှာလဲ', en: 'Where is the airport?', zh: '机场在哪里？', pinyin: 'Jīchǎng zài nǎlǐ?', cat: 'travel' },
+            { my: 'ဘေလ်ရှင်းပေးပါ', en: 'Check, please / Bill please', zh: '买单 / 请结账', pinyin: 'Mǎidān / Qǐng jiézhàng', cat: 'dining' },
+            { my: 'ရေတစ်ခွက် ပေးပါ', en: 'Please give me a glass of water', zh: '请给我一杯水', pinyin: 'Qǐng gěi wǒ yī bēi shuǐ', cat: 'dining' },
+            { my: 'အစပ် မထည့်ပါနဲ့', en: 'Not spicy, please', zh: '请不要放辣', pinyin: 'Qǐng bùyào fàng là', cat: 'dining' },
+            { my: 'အီးမေးလ် ပို့ပေးပါ့မယ်', en: 'I will send you an email', zh: '我会发邮件给你', pinyin: 'Wǒ huì fā yóujiàn gěi nǐ', cat: 'work' },
+            { my: 'အစည်းအဝေး ဘယ်အချိန်စမှာလဲ', en: 'What time does the meeting start?', zh: '会议几点开始？', pinyin: 'Huìyì jǐ diǎn kāishǐ?', cat: 'work' },
+            { my: 'ကူညီပါ ဦး!', en: 'Help me please!', zh: '请帮帮我！', pinyin: 'Qǐng bāng bāng wǒ!', cat: 'emergency' },
+            { my: 'ဆရာဝန် လိုအပ်နေပါတယ်', en: 'I need a doctor', zh: '我需要医生', pinyin: 'Wǒ xūyào yīshēng', cat: 'emergency' }
         ];
+
+        const UI_TRANSLATIONS = {
+            my: {
+                subtitle: 'မြန်မာ 🇲🇲 • English 🇺🇸 • တရုတ် 🇨🇳 ဘာသာပြန်',
+                tabTranslator: 'တိုက်ရိုက် ဘာသာပြန်',
+                tabBot: 'စကားပြန် Bot',
+                tabPhrasebook: 'နေ့စဉ်သုံး စကားပြော',
+                tabHistory: 'မှတ်တမ်း / Favorites',
+                srcPlaceholder: 'ဒီမှာ ဘာသာပြန်လိုသော စာသား သို့မဟုတ် စကားစုများကို ရိုက်ထည့်ပါ...',
+                tgtPlaceholder: 'ဘာသာပြန်ချက် ဤနေရာတွင် ပေါ်လာမည်...',
+                micText: 'အသံဖြင့်ပြောမည်',
+                historyTitle: 'သိမ်းဆည်းထားသော မှတ်တမ်းများ',
+                clearHistory: 'မှတ်တမ်းအားလုံးဖျက်မည်'
+            },
+            en: {
+                subtitle: 'Myanmar 🇲🇲 • English 🇺🇸 • Chinese 🇨🇳 Translator',
+                tabTranslator: 'Live Translate',
+                tabBot: 'Interpreter Bot',
+                tabPhrasebook: 'Phrasebook',
+                tabHistory: 'History / Favorites',
+                srcPlaceholder: 'Type or paste text here to translate...',
+                tgtPlaceholder: 'Translation will appear here...',
+                micText: 'Voice Input',
+                historyTitle: 'Saved Translation History',
+                clearHistory: 'Clear History'
+            },
+            zh: {
+                subtitle: '缅甸语 🇲🇲 • 英语 🇺🇸 • 中文 🇨🇳 翻译',
+                tabTranslator: '实时翻译',
+                tabBot: 'AI 翻译助手',
+                tabPhrasebook: '常用短语',
+                tabHistory: '历史与收藏',
+                srcPlaceholder: '在此输入要翻译的文本...',
+                tgtPlaceholder: '翻译结果将显示在这里...',
+                micText: '语音输入',
+                historyTitle: '保存的历史记录',
+                clearHistory: '清除历史'
+            }
+        };
+
+        function changeUiLanguage(lang) {
+            const t = UI_TRANSLATIONS[lang] || UI_TRANSLATIONS.my;
+            
+            document.getElementById('headerSubtitle').innerText = t.subtitle;
+            document.getElementById('label-tab-translator').innerText = t.tabTranslator;
+            document.getElementById('label-tab-bot').innerText = t.tabBot;
+            document.getElementById('label-tab-phrasebook').innerText = t.tabPhrasebook;
+            document.getElementById('label-tab-history').innerText = t.tabHistory;
+            
+            const srcInput = document.getElementById('sourceText');
+            if (srcInput) srcInput.placeholder = t.srcPlaceholder;
+
+            const tgtPlaceholder = document.getElementById('label-tgt-placeholder');
+            if (tgtPlaceholder) tgtPlaceholder.innerText = t.tgtPlaceholder;
+
+            const micStatus = document.getElementById('micStatusText');
+            if (micStatus) micStatus.innerText = t.micText;
+
+            const histTitle = document.getElementById('label-history-title');
+            if (histTitle) histTitle.innerText = t.historyTitle;
+
+            const clearHist = document.getElementById('label-clear-history');
+            if (clearHist) clearHist.innerText = t.clearHistory;
+
+            showToast(`Language: ${lang === 'my' ? 'မြန်မာ' : lang === 'en' ? 'English' : 'တရုတ်'}`, "info");
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-view').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = "tab-btn px-4 py-2.5 text-sm font-medium rounded-xl flex items-center space-x-2 transition-all whitespace-nowrap text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700/50";
+            });
+
+            document.getElementById(`view-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            if (activeBtn) {
+                activeBtn.className = "tab-btn active px-4 py-2.5 text-sm font-medium rounded-xl flex items-center space-x-2 transition-all whitespace-nowrap bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800/50";
+            }
+
+            if (tabId === 'history') {
+                renderHistory();
+            }
+        }
+
+        async function executeTranslation() {
+            const srcText = document.getElementById('sourceText').value.trim();
+            if (!srcText) return;
+
+            const srcLang = document.getElementById('sourceLang').value;
+            const tgtLang = document.getElementById('targetLang').value;
+
+            showLoader(true);
+
+            try {
+                const result = await fetchGoogleTranslate(srcText, srcLang, tgtLang);
+                displayTranslationResult(result.translated, result.detectedSource || srcLang);
+
+                saveToHistory({
+                    source: srcText,
+                    target: result.translated,
+                    from: srcLang,
+                    to: tgtLang,
+                    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                });
+
+            } catch (err) {
+                try {
+                    const fallbackResult = await fetchMyMemoryTranslate(srcText, srcLang, tgtLang);
+                    displayTranslationResult(fallbackResult, srcLang);
+                } catch (fallbackErr) {
+                    showToast("ဘာသာပြန်ခြင်း မအောင်မြင်ပါ။ အင်တာနက် လိုင်းစစ်ဆေးပေးပါ။", "error");
+                }
+            } finally {
+                showLoader(false);
+            }
+        }
+
+        async function fetchGoogleTranslate(text, sl, tl) {
+            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${tl}&dt=t&q=${encodeURIComponent(text)}`;
+            const res = await fetch(url);
+            const data = await res.json();
+            
+            let translatedText = '';
+            if (data && data[0]) {
+                translatedText = data[0].map(item => item[0]).join('');
+            }
+            return {
+                translated: translatedText,
+                detectedSource: data[2] || sl
+            };
+        }
+
+        async function fetchMyMemoryTranslate(text, sl, tl) {
+            const langPair = `${sl === 'auto' ? 'en' : sl}|${tl}`;
+            const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${langPair}`;
+            const res = await fetch(url);
+            const data = await res.json();
+            return data.responseData.translatedText;
+        }
+
+        function displayTranslationResult(text, detectedSrc) {
+            const targetEl = document.getElementById('targetText');
+            targetEl.innerHTML = `<p class="whitespace-pre-wrap">${escapeHtml(text)}</p>`;
+            state.targetText = text;
+
+            const srcText = document.getElementById('sourceText').value.trim();
+            const isFav = state.favorites.some(f => f.source === srcText && f.target === text);
+            const favBtn = document.getElementById('favBtn');
+            if (favBtn) {
+                const icon = favBtn.querySelector('i');
+                if (isFav) {
+                    icon.className = 'fa-solid fa-star text-amber-500 text-base';
+                    favBtn.classList.add('text-amber-500');
+                } else {
+                    icon.className = 'fa-regular fa-star text-base';
+                    favBtn.classList.remove('text-amber-500');
+                }
+            }
+
+            const tgtLang = document.getElementById('targetLang').value;
+            const phoneticsContainer = document.getElementById('phoneticsContainer');
+            
+            if (tgtLang.startsWith('zh')) {
+                const matched = PHRASEBOOK_DATA.find(p => p.zh === text || text.includes(p.zh));
+                if (matched) {
+                    document.getElementById('phoneticText').innerText = matched.pinyin;
+                    phoneticsContainer.classList.remove('hidden');
+                } else {
+                    phoneticsContainer.classList.add('hidden');
+                }
+            } else {
+                phoneticsContainer.classList.add('hidden');
+            }
+        }
+
+        function showLoader(show) {
+            const loader = document.getElementById('translationLoader');
+            if (show) loader.classList.remove('hidden');
+            else loader.classList.add('hidden');
+        }
+
+        function handleSourceInput() {
+            const text = document.getElementById('sourceText').value;
+            document.getElementById('charCount').innerText = `${text.length} / 5000`;
+        }
+
+        function clearSourceText() {
+            document.getElementById('sourceText').value = '';
+            document.getElementById('targetText').innerHTML = '<span id="label-tgt-placeholder" class="text-slate-400 dark:text-slate-500 text-base italic font-normal">ဘာသာပြန်ချက် ဤနေရာတွင် ပေါ်လာမည်...</span>';
+            document.getElementById('phoneticsContainer').classList.add('hidden');
+            state.targetText = '';
+
+            const favBtn = document.getElementById('favBtn');
+            if (favBtn) {
+                favBtn.querySelector('i').className = 'fa-regular fa-star text-base';
+                favBtn.classList.remove('text-amber-500');
+            }
+
+            handleSourceInput();
+        }
+
+        async function pasteToSource() {
+            try {
+                const text = await navigator.clipboard.readText();
+                document.getElementById('sourceText').value = text;
+                handleSourceInput();
+                showToast("Clipboard မှ စာသားများ ရယူပြီးပါပြီ", "success");
+            } catch (e) {
+                showToast("Clipboard ဖတ်ခွင့်ကို ခွင့်ပြုပေးပါ။", "warning");
+            }
+        }
+
+        async function copyTargetText() {
+            if (!state.targetText || state.targetText.trim() === '') {
+                showToast("ကူးယူရန် ဘာသာပြန်ချက် မရှိသေးပါ", "warning");
+                return;
+            }
+
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(state.targetText);
+                    showToast("ကူးယူပြီးပါပြီ (Copied to Clipboard)!", "success");
+                } else {
+                    throw new Error("Clipboard API unavailable");
+                }
+            } catch (err) {
+                const textArea = document.createElement("textarea");
+                textArea.value = state.targetText;
+                textArea.style.position = "fixed";
+                textArea.style.left = "-9999px";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showToast("ကူးယူပြီးပါပြီ (Copied to Clipboard)!", "success");
+                } catch (e) {
+                    showToast("ကူးယူ၍ မရနိုင်ပါ။", "error");
+                }
+                document.body.removeChild(textArea);
+            }
+        }
+
+        function shareTranslation() {
+            if (!state.targetText) {
+                showToast("မျှဝေရန် ဘာသာပြန်ချက် မရှိသေးပါ။", "warning");
+                return;
+            }
+            if (navigator.share) {
+                navigator.share({
+                    title: 'BurmaLink AI Translation',
+                    text: `${document.getElementById('sourceText').value}\n👉 ${state.targetText}`
+                }).catch(() => {});
+            } else {
+                copyTargetText();
+            }
+        }
+
+        function swapLanguages() {
+            const src = document.getElementById('sourceLang');
+            const tgt = document.getElementById('targetLang');
+            if (src.value === 'auto') src.value = 'en';
+
+            const temp = src.value;
+            src.value = tgt.value;
+            tgt.value = temp;
+
+            handleLangSelectChange();
+        }
+
+        function handleLangSelectChange() {
+            const src = document.getElementById('sourceLang').value;
+            const tgt = document.getElementById('targetLang').value;
+            
+            const langNames = {
+                'auto': 'အလိုအလျောက်',
+                'my': '🇲🇲 မြန်မာ',
+                'en': '🇺🇸 English',
+                'zh-CN': '🇨🇳 တရုတ် - 简体',
+                'zh-TW': '🇹🇼 တရုတ် - 繁體'
+            };
+
+            document.getElementById('sourceLangLabel').innerText = `${langNames[src] || src} စာသား`;
+            document.getElementById('targetLangLabel').innerText = `${langNames[tgt] || tgt} ဘာသာပြန်ချက်`;
+        }
+
+        /* Fixed Speech Recognition implementation */
+        function initSpeechRecognition() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (SpeechRecognition) {
+                state.recognition = new SpeechRecognition();
+                state.recognition.continuous = false;
+                state.recognition.interimResults = false;
+
+                state.recognition.onstart = () => {
+                    state.isRecording = true;
+                    const micBtn = document.getElementById('micBtn');
+                    if (micBtn) {
+                        micBtn.classList.add('bg-rose-100', 'text-rose-600', 'recording-pulse');
+                    }
+                    document.getElementById('micStatusText').innerText = "နားထောင်နေသည်...";
+                };
+
+                state.recognition.onresult = (e) => {
+                    const transcript = e.results[0][0].transcript;
+                    document.getElementById('sourceText').value = transcript;
+                    handleSourceInput();
+                    executeTranslation();
+                };
+
+                state.recognition.onend = () => {
+                    state.isRecording = false;
+                    const micBtn = document.getElementById('micBtn');
+                    if (micBtn) {
+                        micBtn.classList.remove('bg-rose-100', 'text-rose-600', 'recording-pulse');
+                    }
+                    document.getElementById('micStatusText').innerText = "အသံဖြင့်ပြောမည်";
+                };
+
+                state.recognition.onerror = (e) => {
+                    state.isRecording = false;
+                    const micBtn = document.getElementById('micBtn');
+                    if (micBtn) {
+                        micBtn.classList.remove('bg-rose-100', 'text-rose-600', 'recording-pulse');
+                    }
+                    document.getElementById('micStatusText').innerText = "အသံဖြင့်ပြောမည်";
+                    showToast("အသံဖမ်းယူမှု မအောင်မြင်ပါ။ မိုက်ခရိုဖုန်း ခွင့်ပြုချက် စစ်ဆေးပါ။", "warning");
+                };
+            }
+        }
+
+        function toggleSpeechRecognition() {
+            if (!state.recognition) {
+                initSpeechRecognition();
+            }
+
+            if (!state.recognition) {
+                showToast("သင့် Browser တွင် Speech Recognition မပံ့ပိုးပါ။ Google Chrome ကို အသုံးပြုပေးပါ။", "warning");
+                return;
+            }
+
+            if (state.isRecording) {
+                state.recognition.stop();
+            } else {
+                const srcLang = document.getElementById('sourceLang').value;
+                state.recognition.lang = srcLang === 'my' ? 'my-MM' : (srcLang.startsWith('zh') ? 'zh-CN' : 'en-US');
+                try {
+                    state.recognition.start();
+                } catch (e) {
+                    state.recognition.stop();
+                }
+            }
+        }
+
+        function speakText(type) {
+            const text = type === 'source' ? document.getElementById('sourceText').value : state.targetText;
+            const lang = type === 'source' ? document.getElementById('sourceLang').value : document.getElementById('targetLang').value;
+
+            if (!text) return;
+
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                
+                if (lang === 'en') utterance.lang = 'en-US';
+                else if (lang.startsWith('zh')) utterance.lang = 'zh-CN';
+                else utterance.lang = 'my-MM';
+
+                window.speechSynthesis.speak(utterance);
+            } else {
+                showToast("သင့် Browser တွင် Text-To-Speech မပံ့ပိုးပါ။", "warning");
+            }
+        }
+
+        function renderPresetChips() {
+            const presets = [
+                { label: '👋 နှုတ်ခွန်းဆက်', text: 'မင်္ဂလာပါ' },
+                { label: '🙏 ကျေးဇူးတင်ပါတယ်', text: 'ကျေးဇူးအများကြီးတင်ပါတယ်' },
+                { label: '💰 ဘယ်လောက်လဲ', text: 'ဒီဟာ ဘယ်လောက်ကျပါသလဲ' },
+                { label: '🚕 တက္ကစီ', text: 'ဟိုတယ်ကို သွားချင်ပါတယ်' },
+                { label: '🍜 စားသောက်ဆိုင်', text: 'စားသောက်ဖွယ်ရာ မီနူး စာအုပ် ပေးပါ' }
+            ];
+
+            const container = document.getElementById('presetChips');
+            if (container) {
+                container.innerHTML = presets.map(p => `
+                    <button onclick="applyPreset('${escapeJs(p.text)}')" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-700/60 hover:bg-indigo-50 hover:text-indigo-600 dark:hover:bg-slate-700 text-xs text-slate-600 dark:text-slate-300 transition-all border border-slate-200 dark:border-slate-700">
+                        ${p.label}
+                    </button>
+                `).join('');
+            }
+        }
+
+        function applyPreset(text) {
+            document.getElementById('sourceText').value = text;
+            handleSourceInput();
+            executeTranslation();
+        }
 
         function renderCategoryPills() {
             const container = document.getElementById('categoryPills');
-            if (!container) return;
-            container.innerHTML = CATEGORIES.map(cat => `
-                <button onclick="setCategory('${cat.id}')" id="cat-${cat.id}" class="px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${activeCategory === cat.id ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'}">
-                    ${cat.label}
-                </button>
-            `).join('');
+            if (container) {
+                container.innerHTML = CATEGORIES.map(c => `
+                    <button onclick="setPhraseCategory('${c.id}')" class="px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all whitespace-nowrap ${activeCategory === c.id ? 'bg-amber-500 text-white shadow-sm' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200'}">
+                        ${c.label}
+                    </button>
+                `).join('');
+            }
         }
 
-        function setCategory(catId) {
+        function setPhraseCategory(catId) {
             activeCategory = catId;
             renderCategoryPills();
-            renderPhrases();
-        }
-
-        function setPhraseLevel(levelId) {
-            activeLevel = levelId;
-            ['all', 'L1', 'L2', 'L3'].forEach(lvl => {
-                const btn = document.getElementById(`level-${lvl}`);
-                if (btn) {
-                    if (lvl === levelId) {
-                        btn.className = "px-3 py-1.5 rounded-xl text-xs font-semibold bg-amber-500 text-white shadow-sm";
-                    } else {
-                        btn.className = "px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200";
-                    }
-                }
-            });
             renderPhrases();
         }
 
@@ -968,45 +941,25 @@
 
             const filtered = PHRASEBOOK_DATA.filter(p => {
                 const matchCat = activeCategory === 'all' || p.cat === activeCategory;
-                const matchLevel = activeLevel === 'all' || p.level === activeLevel;
                 const matchSearch = p.my.toLowerCase().includes(search) || p.en.toLowerCase().includes(search) || p.zh.includes(search);
-                return matchCat && matchLevel && matchSearch;
+                return matchCat && matchSearch;
             });
-
-            if (filtered.length === 0) {
-                grid.innerHTML = `
-                    <div class="col-span-full p-8 text-center text-slate-400 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">
-                        <i class="fa-solid fa-magnifying-glass text-2xl mb-2"></i>
-                        <p class="text-sm">ရှာဖွေမှုနှင့် ကိုက်ညီသော စကားစုများ မတွေ့ရှိပါ။</p>
-                    </div>
-                `;
-                return;
-            }
-
-            const levelBadge = {
-                L1: { label: 'Level 1 (အခြေခံ)', class: 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300' },
-                L2: { label: 'Level 2 (အလတ်တန်း)', class: 'bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300' },
-                L3: { label: 'Level 3 (အထက်တန်း)', class: 'bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300' }
-            };
 
             grid.innerHTML = filtered.map(item => `
                 <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-slate-200 dark:border-slate-700 space-y-3 flex flex-col justify-between hover:border-amber-400 transition-all">
                     <div class="space-y-2">
                         <div class="flex items-center justify-between">
-                            <span class="text-[10px] font-bold px-2 py-0.5 rounded ${levelBadge[item.level]?.class || 'bg-slate-100 text-slate-600'} uppercase">
-                                ${levelBadge[item.level]?.label || item.level}
+                            <span class="text-xs font-bold px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 uppercase">
+                                🇲🇲 ${escapeHtml(item.my)}
                             </span>
-                            <button onclick="speakPhrase('${escapeJs(item.en)}', 'en')" class="text-slate-400 hover:text-amber-500 text-xs p-1" title="အသံဖွင့်ပါ">
+                            <button onclick="speakPhrase('${escapeJs(item.en)}', 'en')" class="text-slate-400 hover:text-amber-500 text-xs p-1">
                                 <i class="fa-solid fa-volume-high"></i>
                             </button>
                         </div>
-                        <div class="text-base font-bold text-slate-800 dark:text-slate-100">
-                            🇲🇲 ${escapeHtml(item.my)}
-                        </div>
-                        <div class="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                        <div class="text-sm font-semibold text-slate-800 dark:text-slate-100">
                             🇺🇸 ${escapeHtml(item.en)}
                         </div>
-                        <div class="p-2.5 bg-slate-50 dark:bg-slate-900 rounded-xl space-y-0.5">
+                        <div class="p-2 bg-slate-50 dark:bg-slate-900 rounded-xl space-y-0.5">
                             <div class="text-base font-medium text-teal-600 dark:text-teal-400">
                                 🇨🇳 ${escapeHtml(item.zh)}
                             </div>
@@ -1016,7 +969,7 @@
                         </div>
                     </div>
                     <div class="pt-2 flex items-center justify-end space-x-2">
-                        <button onclick="useInTranslator('${escapeJs(item.my)}')" class="px-3 py-1 bg-indigo-50 dark:bg-indigo-950/50 hover:bg-indigo-100 text-indigo-600 dark:text-indigo-300 rounded-lg text-xs font-medium transition-colors">
+                        <button onclick="useInTranslator('${escapeJs(item.my)}')" class="px-3 py-1 bg-indigo-50 dark:bg-indigo-950/50 hover:bg-indigo-100 text-indigo-600 dark:text-indigo-300 rounded-lg text-xs font-medium">
                              Translate သို့ယူမည်
                         </button>
                     </div>
@@ -1044,7 +997,6 @@
             executeTranslation();
         }
 
-        /* INTERPRETER CHATBOT FUNCTIONALITY */
         async function handleBotSubmit(e) {
             e.preventDefault();
             const input = document.getElementById('botInput');
@@ -1064,7 +1016,7 @@
                     <div class="space-y-2">
                         <p class="font-semibold text-slate-800 dark:text-slate-100">ဘာသာပြန်ချက် ရလဒ်များ -</p>
                         <div class="p-2.5 bg-slate-100 dark:bg-slate-900 rounded-xl text-xs space-y-1">
-                            <div>🇨🇳 <b>တရုတ်:</b> ${resZh.translated} ${resZh.pinyin ? `(${resZh.pinyin})` : ''}</div>
+                            <div>🇨🇳 <b>တရုတ်:</b> ${resZh.translated}</div>
                             <div>🇺🇸 <b>English:</b> ${resEn.translated}</div>
                         </div>
                     </div>
@@ -1118,80 +1070,6 @@
             showToast("စကားပြောဝိုင်းကို ရှင်းလင်းပြီးပါပြီ", "info");
         }
 
-        /* SPEECH RECOGNITION UTILITY */
-        function initSpeechRecognition() {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (SpeechRecognition) {
-                state.recognition = new SpeechRecognition();
-                state.recognition.continuous = false;
-                state.recognition.interimResults = false;
-
-                state.recognition.onstart = () => {
-                    state.isRecording = true;
-                    const micBtn = document.getElementById('micBtn');
-                    if (micBtn) {
-                        micBtn.classList.add('bg-rose-600', 'recording-pulse');
-                    }
-                    document.getElementById('micStatusText').innerText = "နားထောင်နေသည်...";
-                };
-
-                state.recognition.onresult = (e) => {
-                    const transcript = e.results[0][0].transcript;
-                    document.getElementById('sourceText').value = transcript;
-                    handleSourceInput();
-                    executeTranslation();
-                    showToast(`အသံဖတ်ယူပြီးပါပြီ: "${transcript}"`, "success");
-                };
-
-                state.recognition.onend = () => {
-                    state.isRecording = false;
-                    const micBtn = document.getElementById('micBtn');
-                    if (micBtn) {
-                        micBtn.classList.remove('bg-rose-600', 'recording-pulse');
-                    }
-                    document.getElementById('micStatusText').innerText = "Voice Input";
-                };
-
-                state.recognition.onerror = () => {
-                    state.isRecording = false;
-                    const micBtn = document.getElementById('micBtn');
-                    if (micBtn) {
-                        micBtn.classList.remove('bg-rose-600', 'recording-pulse');
-                    }
-                    document.getElementById('micStatusText').innerText = "Voice Input";
-                    showToast("အသံဖမ်းယူမှု မအောင်မြင်ပါ။ မိုက်ခရိုဖုန်း ခွင့်ပြုချက် စစ်ဆေးပါ။", "warning");
-                };
-            }
-        }
-
-        function toggleSpeechRecognition() {
-            if (!state.recognition) {
-                initSpeechRecognition();
-            }
-
-            if (!state.recognition) {
-                showToast("သင့် Browser တွင် Speech Recognition မပံ့ပိုးပါ။ Google Chrome ကို အသုံးပြုပေးပါ။", "warning");
-                return;
-            }
-
-            if (state.isRecording) {
-                state.recognition.stop();
-            } else {
-                const voiceLang = document.getElementById('voiceLangSelect')?.value || 'en-US';
-                state.recognition.lang = voiceLang;
-
-                const selectedText = voiceLang === 'en-US' ? 'English 🇺🇸' : (voiceLang === 'zh-CN' ? 'တရုတ် 🇨🇳' : 'မြန်မာ 🇲🇲');
-                showToast(`${selectedText} အသံဖမ်းယူမှု စတင်နေပါသည်...`, "info");
-
-                try {
-                    state.recognition.start();
-                } catch (e) {
-                    state.recognition.stop();
-                }
-            }
-        }
-
-        /* STORAGE & HISTORY FUNCTIONS */
         function saveToHistory(item) {
             state.history.unshift(item);
             if (state.history.length > 50) state.history.pop();
@@ -1325,7 +1203,6 @@
             showToast("JSON ဖိုင် ဒေါင်းလုဒ်လုပ်ပြီးပါပြီ", "success");
         }
 
-        /* MODALS & TOAST UTILITIES */
         function showToast(message, type = 'info') {
             const container = document.getElementById('toastContainer');
             if (!container) return;
@@ -1394,7 +1271,6 @@
             return String(str).replace(/'/g, "\\'").replace(/"/g, '\\"');
         }
 
-        /* INITIALIZATION ON DOM READY */
         document.addEventListener('DOMContentLoaded', () => {
             loadLocalHistory();
             initSpeechRecognition();
